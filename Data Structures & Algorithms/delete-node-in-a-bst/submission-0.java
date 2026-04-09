@@ -15,7 +15,7 @@
  */
 class Solution {
     public TreeNode deleteNode(TreeNode root, int key) {
-        if(root == null) return root;
+        if(root == null) return null;
         if(key > root.val){
             root.right = deleteNode(root.right, key);
         }else if(key < root.val){
@@ -23,8 +23,8 @@ class Solution {
         }else{
             if(root.left == null) return root.right;
             if(root.right == null) return root.left;
-
             TreeNode curr = root.right;
+
             while(curr.left != null){
                 curr = curr.left;
             }
