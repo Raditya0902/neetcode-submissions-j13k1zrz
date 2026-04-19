@@ -21,11 +21,11 @@ class Solution {
         return diameter;
     }
 
-    int helper(TreeNode node){
-        if(node == null) return 0;
-        int lh = helper(node.left);
-        int rh = helper(node.right);
-        diameter = Math.max(lh+rh, diameter);
-        return 1 + Math.max(lh, rh);
+    int helper(TreeNode root){
+        if(root == null) return 0;
+        int lh = helper(root.left);
+        int rh = helper(root.right);
+        diameter = Math.max(lh + rh, diameter);
+        return Math.max(lh, rh) + 1;
     }
 }
