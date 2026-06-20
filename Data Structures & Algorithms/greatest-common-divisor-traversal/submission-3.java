@@ -1,0 +1,70 @@
+class Solution {
+    public boolean canTraverseAllPairs(int[] nums) {
+        int n = nums.length;
+        if(n == 1) return true;
+        int max = Integer.MIN_VALUE;
+        for(int num: nums) {
+            max = Math.max(max, num);
+            if(num == 1) return false;
+        }
+
+        DSU dsu = new DSU(n+max+1);
+        for(int num: nums){
+            Set<Integer> pfs = primesF(num);
+            for(int it: pfs){
+                dsu.union(it, num);
+            }
+        }
+
+        int root = dsu.find(nums[0]);
+        for(int num: nums){
+            if(dsu.find(num) != root) return false;
+        }
+        return true;
+    }
+
+    Set<Integer> primesF(int n){
+        Set<Integer> fs = new HashSet<>();
+        int d = 2;
+        while(d * d <= n){
+            while(n%d == 0){
+                fs.add(d);
+                n = n / d;
+            }
+            d++;
+            if(n > 1) fs.add(n);
+        }
+        return fs;
+    }
+}
+
+class DSU{
+    int[] par;
+    int[] size;
+    DSU(int n){
+        this.par = new int[n];
+        this.size = new int[n];
+        for(int i = 0; i < n; i++) {
+            par[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    int find(int x){
+        if(x != par[x]) par[x] = find(par[x]);
+        return par[x];
+    }
+
+    boolean union(int u, int v){
+        int pu = find(u), pv = find(v);
+        if(pu == pv) return false;
+        if(size[pu] <= size[pv]){
+            par[pu] = pv; //for big one add small ones
+            size[pv] += size[pu];
+        }else{
+            par[pv] = pu;
+            size[pu] += size[pv];
+        }
+        return true;
+    }
+}
