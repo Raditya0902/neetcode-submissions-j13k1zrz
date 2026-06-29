@@ -1,33 +1,50 @@
 class Solution {
+    List<List<String>> res = new ArrayList<>();
+    int[] queens;
+    int n;
     int count = 0;
     public int totalNQueens(int n) {
-        boolean[] cols = new boolean[n];
-        boolean[] diag1 = new boolean[2 * n - 1];
-        boolean[] diag2 = new boolean[2 * n - 1];
-        dfs(0, n, cols, diag1, diag2);
+        this.n = n;
+        this.queens = new int[n];
+        Arrays.fill(queens, -1);
+        dfs(0);
         return count;
     }
 
-    void dfs(int row, int n, boolean[] cols, boolean[] diag1, boolean[] diag2){
-        if(row == n){
+    void dfs(int i){
+        if(i == n){
+            res.add(build());
             count++;
             return;
         }
 
-        for(int col = 0; col < n; col++){
-            int d1 = row - col + (n - 1);
-            int d2 = row + col;
-            if(cols[col] || diag1[d1] || diag2[d2]) continue;
-
-            cols[col] = true;
-            diag1[d1] = true;
-            diag2[d2] = true;
-
-            dfs(row + 1, n, cols, diag1, diag2);
-
-            cols[col] = false;
-            diag1[d1] = false;
-            diag2[d2] = false;
+        for(int j = 0; j < n; j++){
+            if(isValid(i, j, queens)){
+                queens[i] = j;
+                dfs(i+1);
+                queens[i] = -1;
+            }
         }
+    }
+
+    List<String> build(){
+        List<String> board = new ArrayList<>();
+        for(int col: queens){
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < n; i++){
+                sb.append(i == col ? 'Q' : '.');
+            }
+            board.add(sb.toString());
+        }
+        return board;
+    }
+
+    boolean isValid(int i, int j, int[] queens){
+        for(int r = 0; r < i; r++){
+            int c = queens[r];
+            if(c == j) return false;
+            if(Math.abs(c-j) == Math.abs(r-i)) return false;
+        }
+        return true;
     }
 }
