@@ -1,0 +1,8 @@
+class Solution {
+    public int missingNumber(int[] nums) {
+        int n = nums.length, xor = 0;
+        for(int i = 1; i <= n; i++) xor ^= i;
+        for(int i = 0; i < n; i++) xor ^= nums[i];
+        return xor;
+    }
+}
